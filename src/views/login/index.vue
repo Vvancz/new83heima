@@ -86,9 +86,27 @@ export default {
       // 校验整个表单的规则
       // validate 是一个方法 传入的是一个回调函数
       // 两个参数 一是否校验成功 二 未校验的字段
-      this.$refs.myForm.validate(function (isOk) {
+      this.$refs.myForm.validate((isOk) => {
         if (isOk) {
-          console.log('说明校验成功')
+        //   console.log('说明校验成功')
+        // 只有一切校验通过之后 才会进入请求
+          this.$axios({
+            method: 'post',
+            url: '/authorizations',
+            // /authorizations
+            data: this.loginForm
+          }).then(result => {
+            // console.log(result)
+            // 将后台返回的token令牌 存储到前端缓存中
+            window.localStorage.setItem('user-token', result.data.data.token)
+            this.$router.push('/home')
+          }).catch(() => {
+            // console.log(error.message)
+            this.$message({
+              type: 'warning',
+              message: '您的手机号或验证码错误'
+            })
+          })
         }
       })
     }
