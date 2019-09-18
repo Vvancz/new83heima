@@ -7,7 +7,7 @@
     <el-menu
       class="el-menu-vertical-demo"
       background-color="#323745"
-      text-color="#fff"
+      text-color="#adafb5"
       active-text-color="#ffd04b"
     >
       <!-- 首页 -->
