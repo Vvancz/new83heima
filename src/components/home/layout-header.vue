@@ -16,7 +16,10 @@
       <!-- <img class="head-img" src="../../assets/imgs/avatar.jpg" alt /> -->
 
       <!-- 下拉菜单组件  -->
-      <el-dropdown trigger="click">
+      <!--
+        @command="handleCommand"
+       -->
+      <el-dropdown trigger="click" @command="commonClick">
         <!-- 匿名插槽 -->
         <span class="el-dropdown-link">
           {{userInfo.name}}
@@ -24,9 +27,10 @@
         </span>
         <!-- 具名插槽 -->
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item>个人信息</el-dropdown-item>
-          <el-dropdown-item>git地址</el-dropdown-item>
-          <el-dropdown-item>退出</el-dropdown-item>
+          <!-- command属性 -->
+          <el-dropdown-item command="account">个人信息</el-dropdown-item>
+          <el-dropdown-item command="git">git地址</el-dropdown-item>
+          <el-dropdown-item command="lgout">退出</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </el-col>
@@ -38,8 +42,8 @@ export default {
   data () {
     return {
       userInfo: {
-        defaultImg: require('../../assets/imgs/avatar.jpg')// 转成base64
-      }
+      },
+      defaultImg: require('../../assets/imgs/avatar.jpg')// 转成base64
     }
   },
   methods: {
@@ -52,6 +56,19 @@ export default {
       }).then(result => {
         this.userInfo = result.data.data
       })
+    },
+    // 公共点击事件
+    commonClick (key) {
+      if (key === 'account') {
+        // 账户信息
+      } else if (key === 'git') {
+        // 去项目git地址
+        window.location.href = 'https://github.com/Vvancz/new83heima'
+      } else {
+        // 退出
+        window.localStorage.clear() // 这个方法只能清除本项目的前端缓存
+        this.$router.push('/login') // 跳转到登录页
+      }
     }
   },
   created () {
