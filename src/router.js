@@ -3,7 +3,7 @@ import Router from 'vue-router'
 // import Home from './views/home/index.vue'// 路由级组件
 import Home from './views/home/'
 import Login from './views/login/index.vue'
-
+import Main from '../src/views/home/main.vue'
 Vue.use(Router)
 
 export default new Router({
@@ -15,7 +15,10 @@ export default new Router({
     },
     {
       path: '/home',
-      component: Home
+      component: Home,
+      children: [
+        { path: '', component: Main }
+      ]
     },
     {
       path: '/login',
