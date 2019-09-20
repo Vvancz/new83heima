@@ -7,7 +7,7 @@ router.beforeEach(function (to, from, next) {
 // 首先要判断拦截的范围 不拦截login 要拦截home和它的二级路由页面
   if (to.path.startsWith('/home')) {
     // 进入了拦截范围
-    // 判断是否登录
+    // 判断是否登录 如果有token就放行
     let token = window.localStorage.getItem('user-token')
     if (token) {
       next()
