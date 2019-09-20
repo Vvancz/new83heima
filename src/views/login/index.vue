@@ -98,7 +98,7 @@ export default {
           }).then(result => {
             // console.log(result)
             // 将后台返回的token令牌 存储到前端缓存中
-            window.localStorage.setItem('user-token', result.data.data.token)
+            window.localStorage.setItem('user-token', result.data.token)
             this.$router.push('/home')
           }).catch(() => {
             // console.log(error.message)
