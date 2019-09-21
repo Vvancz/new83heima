@@ -68,8 +68,8 @@ export default {
           //   校验格式
           {
             pattern: /^1[3456789]\d{9}$/,
-            message: '请输入合法的手机号',
-            trigger: 'blur'
+            message: '请输入合法的手机号'
+            // trigger: 'blur'
           }
         ],
         code: [
@@ -96,7 +96,7 @@ export default {
             // /authorizations
             data: this.loginForm
           }).then(result => {
-            // console.log(result)
+            console.log(result.data)
             // 将后台返回的token令牌 存储到前端缓存中
             window.localStorage.setItem('user-token', result.data.token)
             this.$router.push('/home')

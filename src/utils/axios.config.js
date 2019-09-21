@@ -25,7 +25,7 @@ axios.interceptors.response.use(function (response) {
   return response.data ? response.data : {}
 }, function (error) {
   // 对响应错误做处理
-  let status = error.response.statuss
+  let status = error.response.status
   let message = '未知错误'
   switch (status) {
     case 400:
