@@ -52,7 +52,7 @@ export default {
       // let token = window.localStorage.getItem('user-token')
       this.$axios({
         url: '/user/profile'
-        // headers: { 'Authorization': `Bearer${token}` }
+        // headers: { 'Authorization': `Bearer ${token}` }
       }).then(result => {
         // this.userInfo = result.data.data
         this.userInfo = result.data// 接收数据对象
