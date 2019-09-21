@@ -1,6 +1,8 @@
 <template>
   <div>
-    <el-card>
+    <!-- v-loading是指令 不加冒号  属性前面才加冒号 -->
+    <!--  v-loading 后面跟布尔值 -->
+    <el-card v-loading="loading">
       <!--  slot="header" 是给el-card的插槽 -->
       <!-- 面包屑组件bread-crumb -->
       <bread-crumb slot="header">
@@ -69,7 +71,9 @@ export default {
         total: 0, // 默认总条数
         currentPage: 1, // 默认第一页
         pageSize: 10
-      }
+      },
+      // 发送请求前 是true 打开遮罩 发送请求后是false关闭遮罩
+      loading: false // 定义一个变量叫loading
     }
   },
   methods: {
@@ -79,6 +83,7 @@ export default {
       this.getComment()
     },
     getComment () {
+      this.loading = true // 显示遮罩
       // 获取评论列表
       this.$axios({
         //   query是路径参数
@@ -88,6 +93,7 @@ export default {
         //   把返回的数据赋值给list
         this.list = result.data.results
         this.page.total = result.data.total_count// 把总条数给分页的总条数
+        this.loading = false // 在then中关闭遮罩
       })
     },
     stateFormatter (row, column, cellValue, index) {
