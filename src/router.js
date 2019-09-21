@@ -21,7 +21,8 @@ export default new Router({
         { path: '', component: Main },
         // 评论列表路径 1.完整写法/home/comment 2.comment
         // component 按需加载
-        { path: 'comment', component: () => import('./views/comment/index.vue') }
+        { path: 'comment', component: () => import('./views/comment/index.vue') },
+        { path: 'material', component: () => import('./views/material/index.vue') }
       ]
     },
     {
