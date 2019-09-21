@@ -4,6 +4,7 @@ import Router from 'vue-router'
 import Home from './views/home/'
 import Login from './views/login/index.vue'
 import Main from '../src/views/home/main.vue'
+// import comment from './views/comment/index.vue'
 Vue.use(Router)
 
 export default new Router({
@@ -17,7 +18,10 @@ export default new Router({
       path: '/home',
       component: Home,
       children: [
-        { path: '', component: Main }
+        { path: '', component: Main },
+        // 评论列表路径 1.完整写法/home/comment 2.comment
+        // component 按需加载
+        { path: 'comment', component: () => import('/views/comment/index.vue') }
       ]
     },
     {
