@@ -6,17 +6,17 @@
       <div class="title">
         <img src="../../assets/imgs/logo_index.png" alt />
       </div>
-
+      <!-- status-icon="true" -->
       <!-- 表单el-form包裹 -->
       <el-form style="margin-top:20px" :model="loginForm" :rules="loginRules" ref="myForm">
         <el-form-item prop="mobile">
           <!-- 手机号 -->
-          <el-input placeholder="请输入手机号" v-model="loginForm.mobile"></el-input>
+          <el-input  placeholder="请输入手机号" v-model="loginForm.mobile"></el-input>
         </el-form-item>
 
         <el-form-item prop="code">
           <!-- 验证码 -->
-          <el-input style="width:65%" placeholder="请输入验证码" v-model="loginForm.code"></el-input>
+          <el-input  style="width:65%" placeholder="请输入验证码" v-model="loginForm.code"></el-input>
           <el-button style="float:right">发送验证码</el-button>
         </el-form-item>
 

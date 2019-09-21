@@ -1,15 +1,22 @@
 // 负责对axios进行处理
 import axios from 'axios'
 import { Message } from 'element-ui'
+import jsonBig from 'json-bigint'
 import router from '../permission'
 axios.defaults.baseURL = 'http://ttapi.research.itcast.cn/mp/v1_0'
+
+axios.defaults.transformResponse = [function (data) {
+  // 换了一个计算方法 保证id不失真
+  return jsonBig.parse(data)
+  // obj.data.results.id.tostring
+}]
 // 请求拦截  在请求到达后台之前拦截
 axios.interceptors.request.use(function (config) {
   // 在发起请求请做一些业务处理
   //   config 要发送请求的配置信息
   //   config.headers.Authorization
   let token = window.localStorage.getItem('user-token')// 获取token
-  config.headers['Authorization'] = `Bearer${token}`// 统一注入token
+  config.headers['Authorization'] = `Bearer ${token}`// 统一注入token
 
   return config
 }, function (error) {
