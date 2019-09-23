@@ -32,7 +32,7 @@
         <el-menu-item index="/home/material">素材管理</el-menu-item>
       </el-submenu>
 
-      <el-submenu>
+      <el-submenu index="1">
         <template slot="title">
           <i class="el-icon-s-custom"></i>
           <span slot="title">粉丝管理</span>

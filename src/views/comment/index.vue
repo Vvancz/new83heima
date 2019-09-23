@@ -117,7 +117,7 @@ export default {
           // 成功之后会进入then
           // 重新拉取数据
           this.getComment()
-          // Number.MAX_SAFE_INTEGER 最大安全整数 如果超过这个数字就会失真（计算偏差）json.pase（）转换不精确 axios自动调用的
+          // Number.MAX_SAFE_INTEGER 最大安全整数 如果超过这个数字就会失真（计算偏差）json.parse（）转换不精确 axios自动调用的
           // json.pase()在处理大数字的 时候会出现计算偏差
           // json-bigint npm 第三方转化包 专门处理大数字
         })

@@ -7,7 +7,7 @@ axios.defaults.baseURL = 'http://ttapi.research.itcast.cn/mp/v1_0'
 
 axios.defaults.transformResponse = [function (data) {
   // 换了一个计算方法 保证id不失真
-  return jsonBig.parse(data)
+  return data ? jsonBig.parse(data) : ''
   // obj.data.results.id.tostring
 }]
 // 请求拦截  在请求到达后台之前拦截
