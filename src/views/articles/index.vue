@@ -11,25 +11,27 @@
       <!-- el-form-item 有一个标题属性label="" -->
 
       <el-form-item label="文章状态 :">
-        <el-radio-group v-model="select">
-          <el-radio :label="3">全部</el-radio>
-          <el-radio :label="6">草稿</el-radio>
-          <el-radio :label="9">待审核</el-radio>
-          <el-radio :label="9">审核通过</el-radio>
-          <el-radio :label="9">审核失败</el-radio>
+          <!-- v-model来源于el-radio中label属性 -->
+        <el-radio-group @change="changeCondition" v-model="formData.status">
+          <el-radio :label="5">全部</el-radio>
+          <el-radio :label="0">草稿</el-radio>
+          <el-radio :label="1">待审核</el-radio>
+          <el-radio :label="2">审核通过</el-radio>
+          <el-radio :label="3">审核失败</el-radio>
         </el-radio-group>
       </el-form-item>
 
       <el-form-item label="频道列表 :">
-        <el-select v-model="value" placeholder="请选择">
+        <el-select v-model="formData.channel_id" placeholder="请选择" @change="changeCondition">
           <!-- 显示值默认从label中取  value是存储值 -->
           <!-- v-model的值来源于value  -->
-          <el-option
+          <!-- <el-option
             v-for="item in options"
             :key="item.value"
             :label="item.label"
             :value="item.value"
-          ></el-option>
+          ></el-option> -->
+          <el-option v-for="item in channels" :key="item.id" :label="item.name" :value="item.id"></el-option>
         </el-select>
       </el-form-item>
 
@@ -39,7 +41,9 @@
         <div class="block">
           <span class="demonstration"></span>
           <el-date-picker
-            v-model="value1"
+          @change="changeCondition"
+            v-model="formData.date"
+            value-format="yyyy-MM-dd"
             type="daterange"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
@@ -59,6 +63,7 @@
         <div class="info">
           <span class="title">{{item.title}}</span>
           <!-- 插值表达式 使用过滤器 -->
+          <!-- v-bind 使用过滤器 -->
           <el-tag class="status" :type="item.status|statusType">{{item.status|statusText}}</el-tag>
           <span class="date">{{item.pubdate}}</span>
         </div>
@@ -81,7 +86,14 @@
 export default {
   data () {
     return {
+      formData: {
+        status: 5,
+        // 空字符串和null的区别： 空字符串有值但值是空字符串  null没有值
+        channel_id: null,
+        date: []
+      },
       list: [],
+      channels: [], // 定义一个频道数组接收传过来的值
       //   将图片地址转成base64
       defaultImg: require('../../assets/imgs/homea.jpg')
       // radio:
@@ -89,16 +101,47 @@ export default {
     }
   },
   methods: {
-    getArticles () {
+    getArticles (params) {
       this.$axios({
-        url: '/articles'
+        url: '/articles',
+        // params:params
+        params
       }).then(result => {
         this.list = result.data.results // 获取文章列表
       })
+    },
+    getChannels () {
+      // 获取频道列表
+      this.$axios({
+        url: '/channels'
+      }).then(result => {
+        this.channels = result.data.channels
+      })
+    },
+    // 状态变化事件
+    changeCondition () {
+      // 因为值改变时 formdata已经是最新的值 所以直接可以用formdata的值请求
+      //   开始时间
+    //   let beginDate = this.formData.date.length ? this.formData.date[0] : null
+    //   let endDate = this.formData.date.length > 1 ? this.formData.date[1] : null
+      let params = {
+        //   状态 如果为5时就是全部 接口要求如果为全部时就什么都不传 null就是什么都不传
+        status: this.formData.status === 5 ? null : this.formData.status,
+        channel_id: this.formData.channel_id,
+        begin_pubdate: this.formData.date.length ? this.formData.date[0] : null,
+        end_pubdate: this.formData.date.length > 1 ? this.formData.date[1] : null
+      }
+      this.getArticles(params)
     }
+    // changeSelect () {
+    //   this.changeCondition()
+    // }
   },
   created () {
+    // 获取文章
     this.getArticles()
+    // 获取频道
+    this.getChannels()
   },
   filters: {
     //   定义一个过滤器v-bind:或者插值表达式|
@@ -170,7 +213,7 @@ export default {
         font-size: 14px;
       }
       .status {
-        width: 100px;
+        width: 70px;
         text-align: center;
       }
     }
