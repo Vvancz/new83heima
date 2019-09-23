@@ -72,10 +72,10 @@
       <!-- 右侧 -->
       <div class="right">
         <span>
-          <i class="el-icon-edit">修改</i>
+          <i class="el-icon-edit" >修改</i>
         </span>
-        <span>
-          <i class="el-icon-delete">删除</i>
+        <span @click="delArticles(item.id)">
+          <i class="el-icon-delete" >删除</i>
         </span>
       </div>
     </div>
@@ -118,6 +118,18 @@ export default {
     }
   },
   methods: {
+    delArticles (id) {
+      this.$confirm('您确定要删除此文章吗?').then(() => {
+        this.$axios({
+          // id超过了安全数字限制 被转成了大数字类型 要想变成字符串要用id.toString()
+          url: `/articles/${id.toString()}`,
+          method: 'delete'
+        }).then(() => {
+          // 带条件的查询 重新拉取数据
+          this.queryArticle()
+        })
+      })
+    },
     getArticles (params) {
       this.$axios({
         url: '/articles',
@@ -265,6 +277,7 @@ export default {
     font-size: 12px;
     span {
       margin-right: 8px;
+      cursor: pointer;
     }
   }
 }

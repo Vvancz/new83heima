@@ -24,7 +24,8 @@ export default new Router({
         // component 按需加载
         { path: 'comment', component: () => import('./views/comment/index.vue') },
         { path: 'material', component: () => import('./views/material/index.vue') },
-        { path: 'articles', component: () => import('./views/articles/index.vue') }
+        { path: 'articles', component: () => import('./views/articles/index.vue') },
+        { path: 'publish', component: () => import('./views/publish/index.vue') }
       ]
     },
     {
