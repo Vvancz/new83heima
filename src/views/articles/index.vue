@@ -34,20 +34,46 @@
       </el-form-item>
 
       <el-form-item label="时间选择 :">
-          <!--  range-separator="至"去掉 -->
-          <!-- 绑定的值是个数组 -->
+        <!--  range-separator="至"去掉 -->
+        <!-- 绑定的值是个数组 -->
         <div class="block">
           <span class="demonstration"></span>
           <el-date-picker
             v-model="value1"
             type="daterange"
-
             start-placeholder="开始日期"
             end-placeholder="结束日期"
           ></el-date-picker>
         </div>
       </el-form-item>
     </el-form>
+
+    <!-- 主体内容 -->
+    <div class="total">共找到条符合条件的内容</div>
+
+    <div class="article-item" v-for="(item,index) in list" :key="index">
+      <!-- 布局 -->
+      <!-- 左侧 -->
+      <div class="left">
+        <img :src="item.cover.images.length?item.cover.images[0]:defaultImg" alt />
+        <div class="info">
+          <span class="title">{{item.title}}</span>
+          <!-- 插值表达式 使用过滤器 -->
+          <el-tag class="status" :type="item.status|statusType">{{item.status|statusText}}</el-tag>
+          <span class="date">{{item.pubdate}}</span>
+        </div>
+      </div>
+
+      <!-- 右侧 -->
+      <div class="right">
+        <span>
+          <i class="el-icon-edit">修改</i>
+        </span>
+        <span>
+          <i class="el-icon-delete">删除</i>
+        </span>
+      </div>
+    </div>
   </el-card>
 </template>
 
@@ -55,12 +81,105 @@
 export default {
   data () {
     return {
+      list: [],
+      //   将图片地址转成base64
+      defaultImg: require('../../assets/imgs/homea.jpg')
       // radio:
       //   select: ''
+    }
+  },
+  methods: {
+    getArticles () {
+      this.$axios({
+        url: '/articles'
+      }).then(result => {
+        this.list = result.data.results // 获取文章列表
+      })
+    }
+  },
+  created () {
+    this.getArticles()
+  },
+  filters: {
+    //   定义一个过滤器v-bind:或者插值表达式|
+    statusText (value) {
+      // 过滤器的第一个值永远是前面传过来的
+      switch (value) {
+        case 0:
+          return '草稿'
+
+        case 1:
+          return '待审核'
+        case 2:
+          return '审核通过'
+        case 3:
+          return '审核失败'
+        case 4:
+          return '已删除'
+      }
+    },
+    statusType (value) {
+      // 处理状态的显示样式
+      switch (value) {
+        case 0:
+          return 'warning'
+
+        case 1:
+          return 'info'
+        case 2:
+          return 'success'
+        case 3:
+          return 'danger'
+        case 4:
+          return 'danger'
+      }
     }
   }
 }
 </script>
 
-<style>
+<style lang='less' scoped>
+.total {
+  border-bottom: 1px dashed #ccc;
+  height: 50px;
+  line-height: 50px;
+}
+.article-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 10px;
+  border-bottom: 1px solid #f2f3f5;
+  .left {
+    display: flex;
+    img {
+      width: 180px;
+      height: 100px;
+      border-radius: 4px;
+    }
+    .info {
+      height: 100px;
+      display: flex;
+      flex-direction: column;
+      margin-left: 10px;
+      justify-content: space-around;
+      .date {
+        color: #999;
+        font-size: 12px;
+      }
+      .title {
+        font-size: 14px;
+      }
+      .status {
+        width: 100px;
+        text-align: center;
+      }
+    }
+  }
+  .right {
+    font-size: 12px;
+    span {
+      margin-right: 8px;
+    }
+  }
+}
 </style>
