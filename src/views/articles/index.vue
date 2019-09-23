@@ -11,7 +11,7 @@
       <!-- el-form-item 有一个标题属性label="" -->
 
       <el-form-item label="文章状态 :">
-          <!-- v-model来源于el-radio中label属性 -->
+        <!-- v-model来源于el-radio中label属性 -->
         <el-radio-group @change="changeCondition" v-model="formData.status">
           <el-radio :label="5">全部</el-radio>
           <el-radio :label="0">草稿</el-radio>
@@ -30,7 +30,7 @@
             :key="item.value"
             :label="item.label"
             :value="item.value"
-          ></el-option> -->
+          ></el-option>-->
           <el-option v-for="item in channels" :key="item.id" :label="item.name" :value="item.id"></el-option>
         </el-select>
       </el-form-item>
@@ -41,7 +41,7 @@
         <div class="block">
           <span class="demonstration"></span>
           <el-date-picker
-          @change="changeCondition"
+            @change="changeCondition"
             v-model="formData.date"
             value-format="yyyy-MM-dd"
             type="daterange"
@@ -53,7 +53,7 @@
     </el-form>
 
     <!-- 主体内容 -->
-    <div class="total">共找到条符合条件的内容</div>
+    <div class="total">共找到{{page.total}}条符合条件的内容</div>
 
     <div class="article-item" v-for="(item,index) in list" :key="index">
       <!-- 布局 -->
@@ -79,6 +79,18 @@
         </span>
       </div>
     </div>
+
+    <!-- 分页组件 -->
+    <el-row type="flex" justify="center">
+      <el-pagination
+      background
+      @current-change="changePage"
+      layout="prev, pager, next"
+      :total="page.total"
+      :current-page="page.currentPage"
+      :page-size="page.pageSize">
+      </el-pagination>
+    </el-row>
   </el-card>
 </template>
 
@@ -95,7 +107,12 @@ export default {
       list: [],
       channels: [], // 定义一个频道数组接收传过来的值
       //   将图片地址转成base64
-      defaultImg: require('../../assets/imgs/homea.jpg')
+      defaultImg: require('../../assets/imgs/homea.jpg'),
+      page: {
+        total: 0,
+        currentPage: 1,
+        pageSize: 10
+      }
       // radio:
       //   select: ''
     }
@@ -108,6 +125,7 @@ export default {
         params
       }).then(result => {
         this.list = result.data.results // 获取文章列表
+        this.page.total = result.data.total_count
       })
     },
     getChannels () {
@@ -122,15 +140,40 @@ export default {
     changeCondition () {
       // 因为值改变时 formdata已经是最新的值 所以直接可以用formdata的值请求
       //   开始时间
-    //   let beginDate = this.formData.date.length ? this.formData.date[0] : null
-    //   let endDate = this.formData.date.length > 1 ? this.formData.date[1] : null
+      //   let beginDate = this.formData.date.length ? this.formData.date[0] : null
+      //   let endDate = this.formData.date.length > 1 ? this.formData.date[1] : null
+      this.page.currentPage = 1
+      this.queryArticle()
+    //   let params = {
+    //     //   状态 如果为5时就是全部 接口要求如果为全部时就什么都不传 null就是什么都不传
+    //     status: this.formData.status === 5 ? null : this.formData.status,
+    //     channel_id: this.formData.channel_id,
+    //     begin_pubdate: this.formData.date.length ? this.formData.date[0] : null,
+    //     end_pubdate:
+    //       this.formData.date.length > 1 ? this.formData.date[1] : null,
+    //     page: this.page.currentPage,
+    //     per_page: this.page.pageSize
+    //   }
+    //   this.getArticles(params)
+    },
+    // 切换页码
+    changePage (newPage) {
+      this.page.currentPage = newPage // 赋值最新页码
+      this.queryArticle()
+    },
+    queryArticle () {
       let params = {
+        //   分页时要携带条件
         //   状态 如果为5时就是全部 接口要求如果为全部时就什么都不传 null就是什么都不传
         status: this.formData.status === 5 ? null : this.formData.status,
         channel_id: this.formData.channel_id,
         begin_pubdate: this.formData.date.length ? this.formData.date[0] : null,
-        end_pubdate: this.formData.date.length > 1 ? this.formData.date[1] : null
+        end_pubdate:
+          this.formData.date.length > 1 ? this.formData.date[1] : null,
+        page: this.page.currentPage,
+        per_page: this.page.pageSize
       }
+      //   params.page = newPage
       this.getArticles(params)
     }
     // changeSelect () {
