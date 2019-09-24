@@ -15,7 +15,7 @@
 
         </el-form-item>
         <el-form-item label="封面" prop="cover" style="margin-top:150px">
-            <el-radio-group v-model="formData.cover.type">
+            <el-radio-group @change="changeType" v-model="formData.cover.type">
                 <el-radio :label="1">单图</el-radio>
                 <el-radio :label="3">三图</el-radio>
                 <el-radio :label="0">无图</el-radio>
@@ -64,6 +64,18 @@ export default {
     }
   },
   methods: {
+    changeType () {
+      // 类型改变事件
+      // alert(this.formData.cover.type)
+      // 这里可以获取到最新的type 根据type进行images的长度变化
+      if (this.formData.cover.type === 1) {
+        this.formData.cover.images = ['']// images 长度为1
+      } else if (this.formData.cover.type === 3) {
+        this.formData.cover.images = ['', '', '']
+      } else {
+        this.formData.cover.images = []
+      }
+    },
     getCannels () {
       this.$axios({
         url: '/channels'
