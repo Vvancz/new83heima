@@ -1,5 +1,5 @@
 <template>
-  <el-card>
+  <el-card v-loading="loading">
     <!-- 面包屑组件 -->
     <bread-crumb slot="header">
       <template slot="title">发布文章</template>
@@ -24,7 +24,7 @@
         </el-form-item>
         <!-- 封面组件 -->
         <!-- 传递父组件的值到子组件 -->
-        <cover-img :images="formData.cover.images"></cover-img>
+        <cover-img @selectImg="changeImg" :images="formData.cover.images"></cover-img>
         <el-form-item label="频道" prop="channel_id">
             <el-select v-model="formData.channel_id">
                 <el-option v-for="item in channels" :key="item.id" :value="item.id" :label="item.name">
@@ -62,11 +62,26 @@ export default {
         // 发布规则
         title: [{ required: true, message: '标题不能为空' }, { min: 5, max: 30, message: '标题长度要在5~30字符之间' }],
         content: [{ required: true, message: '内容不能为空' }],
-        channel_id: [{ required: true, message: '频道不能为空' }]
+        channel_id: [{ required: true, message: '频道不能为空' }],
+        loading: false
       }
     }
   },
   methods: {
+    // 接收子组件传过来的数据 更改images数据 images是数组
+    changeImg (url, index) {
+      // alert(url + '-' + index)
+      // 第一种方法：
+      // this.formData.cover.images = this.formData.cover.images.map(function (item, i) {
+      //   if (index === i) {
+      //     // 说明找到了要修改的值
+      //     return url
+      //   }
+      //   return item
+      // })
+      // 第二种方法：
+      this.formData.cover.images = this.formData.cover.images.map((item, i) => i === index ? url : item)
+    },
     changeType () {
       // 类型改变事件
       // alert(this.formData.cover.type)
@@ -87,11 +102,13 @@ export default {
       })
     },
     getArticleById (articleId) {
+      this.loading = true
       this.$axios({
         // articleId已经是字符串了
         url: `/articles/${articleId}`
       }).then(result => {
         this.formData = result.data
+        this.loading = false
       })
     },
     publish (draft) {

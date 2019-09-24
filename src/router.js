@@ -28,7 +28,9 @@ export default new Router({
         // 修改文章
         { path: 'publish/:articleId', component: () => import('./views/publish/index.vue') },
         // 再写一个路由 发布文章不能匹配动态路由
-        { path: 'publish', component: () => import('./views/publish/index.vue') }
+        { path: 'publish', component: () => import('./views/publish/index.vue') },
+        // 账户信息
+        { path: 'account', component: () => import('./views/account/index.vue') }
       ]
     },
     {
