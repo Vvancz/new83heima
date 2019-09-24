@@ -11,10 +11,10 @@
             <el-input v-model="formData.title" style="width:400px"></el-input>
         </el-form-item>
         <el-form-item label="内容" prop="content">
-            <el-input v-model="formData.content" type="textarea" :rows="4"></el-input>
+            <quill-editor v-model="formData.content" style="height:300px"></quill-editor>
 
         </el-form-item>
-        <el-form-item label="封面" prop="cover">
+        <el-form-item label="封面" prop="cover" style="margin-top:150px">
             <el-radio-group v-model="formData.cover.type">
                 <el-radio :label="1">单图</el-radio>
                 <el-radio :label="3">三图</el-radio>
@@ -71,14 +71,23 @@ export default {
         this.channels = result.data.channels // 获取channels频
       })
     },
-    publish () {
+    getArticleById (articleId) {
+      this.$axios({
+        // articleId已经是字符串了
+        url: `/articles/${articleId}`
+      }).then(result => {
+        this.formData = result.data
+      })
+    },
+    publish (draft) {
       // 发布文章
       this.$refs.publishForm.validate((isOk) => {
         if (isOk) {
+          let { articleId } = this.$router.params
           this.$axios({
-            url: 'articles',
-            method: 'post',
-            params: { draft: false }, // draft为true时是草稿
+            url: articleId ? `/articles/${articleId}` : 'articles',
+            method: articleId ? 'put' : 'post',
+            params: { draft }, // draft为true时是草稿 false时是正式内容
             data: this.formData
           }).then(() => {
             // 发布成功了 就回到内容列表
@@ -90,6 +99,11 @@ export default {
   },
   created () {
     this.getCannels() // 获取频道
+    // 获取文章的id 解构赋值
+    // 有articleId 就是编辑文章  没他就是新增文章
+    let { articleId } = this.$route.params
+    // 如果articleId存在才执行后面的逻辑
+    articleId && this.getArticleById(articleId)
   }
 }
 </script>
