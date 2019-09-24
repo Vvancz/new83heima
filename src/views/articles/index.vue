@@ -71,7 +71,7 @@
 
       <!-- 右侧 -->
       <div class="right">
-        <span>
+        <span @click="goEdit(item.id)">
           <i class="el-icon-edit" >修改</i>
         </span>
         <span @click="delArticles(item.id)">
@@ -81,7 +81,7 @@
     </div>
 
     <!-- 分页组件 -->
-    <el-row type="flex" justify="center">
+    <el-row type="flex" justify="center" style='margin:10px 0'>
       <el-pagination
       background
       @current-change="changePage"
@@ -118,6 +118,10 @@ export default {
     }
   },
   methods: {
+    goEdit (id) {
+      // 动态路由传参
+      this.$router.push(`/home/publish/${id.toString()}`)
+    },
     delArticles (id) {
       this.$confirm('您确定要删除此文章吗?').then(() => {
         this.$axios({

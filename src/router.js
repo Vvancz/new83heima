@@ -25,6 +25,9 @@ export default new Router({
         { path: 'comment', component: () => import('./views/comment/index.vue') },
         { path: 'material', component: () => import('./views/material/index.vue') },
         { path: 'articles', component: () => import('./views/articles/index.vue') },
+        // 修改文章
+        { path: 'publish/:articleId', component: () => import('./views/publish/index.vue') },
+        // 再写一个路由 发布文章不能匹配动态路由
         { path: 'publish', component: () => import('./views/publish/index.vue') }
       ]
     },
