@@ -30,7 +30,8 @@ export default new Router({
         // 再写一个路由 发布文章不能匹配动态路由
         { path: 'publish', component: () => import('./views/publish/index.vue') },
         // 账户信息
-        { path: 'account', component: () => import('./views/account/index.vue') }
+        { path: 'account', component: () => import('./views/account/index.vue') },
+        { path: 'gradata', component: () => import('./views/fans/index.vue') }
       ]
     },
     {

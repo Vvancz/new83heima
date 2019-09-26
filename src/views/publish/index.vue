@@ -33,8 +33,8 @@
             </el-select>
         </el-form-item>
         <el-form-item>
-            <el-button type="primary" @click="publish">发布文章</el-button>
-            <el-button>存入草稿</el-button>
+            <el-button type="primary" @click="publish(false)">发布文章</el-button>
+            <el-button @click="publish(true)">存入草稿</el-button>
 
         </el-form-item>
 
@@ -46,24 +46,25 @@
 export default {
   data () {
     return {
+      loading: false,
       channels: [],
       formData: {
         // 表单数据对象
         title: '', // 标题
         content: '', // 内容
+        channel_id: null, // 文章所属频道id
         // 封面类型 -1:自动，0-无图，1-1张，3-3张
         cover: {
           type: 0,
           images: []
-        },
-        channel_id: null // 文章所属频道id
+        }
       },
       publishRules: {
         // 发布规则
         title: [{ required: true, message: '标题不能为空' }, { min: 5, max: 30, message: '标题长度要在5~30字符之间' }],
         content: [{ required: true, message: '内容不能为空' }],
-        channel_id: [{ required: true, message: '频道不能为空' }],
-        loading: false
+        channel_id: [{ required: true, message: '频道不能为空' }]
+
       }
     }
   },
@@ -94,6 +95,7 @@ export default {
         this.formData.cover.images = []
       }
     },
+    // 获取频道数据
     getCannels () {
       this.$axios({
         url: '/channels'
@@ -101,6 +103,7 @@ export default {
         this.channels = result.data.channels // 获取channels频
       })
     },
+    // 根据文章id获取文章详情
     getArticleById (articleId) {
       this.loading = true
       this.$axios({
@@ -115,9 +118,9 @@ export default {
       // 发布文章
       this.$refs.publishForm.validate((isOk) => {
         if (isOk) {
-          let { articleId } = this.$router.params
+          let { articleId } = this.$route.params // 有 articleId就是编辑 没articleId就是新增
           this.$axios({
-            url: articleId ? `/articles/${articleId}` : 'articles',
+            url: articleId ? `/articles/${articleId}` : '/articles',
             method: articleId ? 'put' : 'post',
             params: { draft }, // draft为true时是草稿 false时是正式内容
             data: this.formData
@@ -125,6 +128,29 @@ export default {
             // 发布成功了 就回到内容列表
             this.$router.push('/home/articles')
           })
+          // 原始代码
+          // if (articleId) {
+          //   // 修改
+          //   this.$axios({
+          //     url: `/articles/${articleId}`,
+          //     params: { draft }, // draft为true时 是草稿 为false时 是正式内容
+          //     method: 'put',
+          //     data: this.formData
+          //   }).then(result => {
+          //     // 发布成功了 => 回到内容列表
+          //     this.$router.push('/home/articles')
+          //   })
+          // } else {
+          //   this.$axios({
+          //     url: '/articles',
+          //     method: 'post',
+          //     params: { draft }, // draft为true时 是草稿 为false时 是正式内容
+          //     data: this.formData
+          //   }).then(() => {
+          //   // 发布成功了 => 回到内容列表
+          //     this.$router.push('/home/articles')
+          //   })
+          // }
         }
       })
     }

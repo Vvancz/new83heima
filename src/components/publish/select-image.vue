@@ -85,6 +85,9 @@ export default {
   },
   created () {
     this.getAllImg()
+    // this.$on('selectOneImg', () => {
+
+    // })
   }
 }
 </script>
