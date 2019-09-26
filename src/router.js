@@ -16,6 +16,11 @@ export default new Router({
       redirect: '/home'
     },
     {
+      // 匹配任何地址 如果其他的可以匹配 优先匹配其他 否则匹配该组件
+      path: '*',
+      component: () => import('./views/404.vue')
+    },
+    {
       path: '/home',
       component: Home,
       children: [
