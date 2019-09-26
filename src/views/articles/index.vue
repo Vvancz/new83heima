@@ -95,6 +95,7 @@
 </template>
 
 <script>
+// import { getArticles } from '../../api/articles/articles'
 export default {
   data () {
     return {

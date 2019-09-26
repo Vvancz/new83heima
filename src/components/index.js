@@ -11,6 +11,7 @@ import { quillEditor } from 'vue-quill-editor'
 import coverImg from './publish/cover-img.vue'
 
 import selectImg from './publish/select-image.vue'
+import heimaDate from './common/heima-date.vue'
 
 export default {
   install (Vue) {
@@ -21,6 +22,7 @@ export default {
     Vue.component('quill-editor', quillEditor) // 全局注册富文本编辑器
     Vue.component('cover-img', coverImg) // 全局注册富文本编辑器
     Vue.component('select-img', selectImg) // 全局注册富文本编辑器
+    Vue.component('heima-date', heimaDate) //
   }
 
 }
